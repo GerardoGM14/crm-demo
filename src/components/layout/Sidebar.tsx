@@ -1,23 +1,25 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { MdDashboard, MdPeople, MdAttachMoney, MdSettings, MdPerson, MdTask, MdCalendarToday, MdBarChart, MdEmail, MdHelp } from 'react-icons/md';
 import { cn } from '../../utils/cn';
 
 export const Sidebar: React.FC = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
 
   const navItems = [
-    { name: 'Dashboard', path: '/', icon: MdDashboard, roles: ['ADMIN', 'MANAGER', 'SALES'] },
-    { name: 'Leads', path: '/leads', icon: MdPeople, roles: ['ADMIN', 'MANAGER', 'SALES'] },
-    { name: 'Opportunities', path: '/opportunities', icon: MdAttachMoney, roles: ['ADMIN', 'MANAGER', 'SALES'] },
-    { name: 'Tasks', path: '/tasks', icon: MdTask, roles: ['ADMIN', 'MANAGER', 'SALES'] },
-    { name: 'Calendar', path: '/calendar', icon: MdCalendarToday, roles: ['ADMIN', 'MANAGER', 'SALES'] },
-    { name: 'Reports', path: '/reports', icon: MdBarChart, roles: ['ADMIN', 'MANAGER'] },
-    { name: 'Messages', path: '/messages', icon: MdEmail, roles: ['ADMIN', 'MANAGER', 'SALES'] },
-    { name: 'Users', path: '/users', icon: MdPerson, roles: ['ADMIN'] },
-    { name: 'Settings', path: '/settings', icon: MdSettings, roles: ['ADMIN', 'MANAGER', 'SALES'] },
-    { name: 'Help', path: '/help', icon: MdHelp, roles: ['ADMIN', 'MANAGER', 'SALES'] },
+    { name: t('nav.dashboard'), path: '/', icon: MdDashboard, roles: ['ADMIN', 'MANAGER', 'SALES'] },
+    { name: t('nav.leads'), path: '/leads', icon: MdPeople, roles: ['ADMIN', 'MANAGER', 'SALES'] },
+    { name: t('nav.opportunities'), path: '/opportunities', icon: MdAttachMoney, roles: ['ADMIN', 'MANAGER', 'SALES'] },
+    { name: t('nav.tasks'), path: '/tasks', icon: MdTask, roles: ['ADMIN', 'MANAGER', 'SALES'] },
+    { name: t('nav.calendar'), path: '/calendar', icon: MdCalendarToday, roles: ['ADMIN', 'MANAGER', 'SALES'] },
+    { name: t('nav.reports'), path: '/reports', icon: MdBarChart, roles: ['ADMIN', 'MANAGER'] },
+    { name: t('nav.messages'), path: '/messages', icon: MdEmail, roles: ['ADMIN', 'MANAGER', 'SALES'] },
+    { name: t('nav.users'), path: '/users', icon: MdPerson, roles: ['ADMIN'] },
+    { name: t('nav.settings'), path: '/settings', icon: MdSettings, roles: ['ADMIN', 'MANAGER', 'SALES'] },
+    { name: t('nav.help'), path: '/help', icon: MdHelp, roles: ['ADMIN', 'MANAGER', 'SALES'] },
   ];
 
   return (
@@ -25,12 +27,12 @@ export const Sidebar: React.FC = () => {
       <div className="h-16 flex items-center px-6 border-b border-gray-100 bg-gray-50/50">
         <div className="flex items-center gap-2 font-bold text-xl text-blue-700 tracking-tight">
           <MdDashboard className="w-7 h-7" />
-          <span>CRM Pro</span>
+          <span>{t('app.title')}</span>
         </div>
       </div>
 
       <nav className="flex-1 py-4 px-3 space-y-0.5 overflow-y-auto custom-scrollbar">
-        <div className="px-3 mb-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">Main Menu</div>
+        <div className="px-3 mb-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">{t('nav.main_menu')}</div>
         {navItems.filter(item => user && item.roles.includes(user.role)).map((item) => (
           <NavLink
             key={item.path}

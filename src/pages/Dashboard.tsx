@@ -3,10 +3,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card'
 import { MdAttachMoney, MdPeople, MdTrendingUp, MdPieChart, MdDns, MdGroupWork, MdTrackChanges } from 'react-icons/md';
 import { storage } from '../utils/storage';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
+import { translations } from '../utils/translations';
 import type { Lead, Opportunity } from '../types';
 
 export const Dashboard: React.FC = () => {
   const { user } = useAuth();
+  const { t, language } = useLanguage();
   const [stats, setStats] = useState({
     totalLeads: 0,
     activeOpportunities: 0,
@@ -38,7 +41,7 @@ export const Dashboard: React.FC = () => {
 
   const statCards = [
     { 
-      title: 'Total Revenue', 
+      title: t('dashboard.stats.total_revenue'), 
       value: `$${stats.wonValue.toLocaleString()}`, 
       change: '+12.5%', 
       isPositive: true,
@@ -47,7 +50,7 @@ export const Dashboard: React.FC = () => {
       bg: 'bg-emerald-50' 
     },
     { 
-      title: 'Active Pipeline', 
+      title: t('dashboard.stats.active_pipeline'), 
       value: `$${stats.totalValue.toLocaleString()}`, 
       change: '+5.2%', 
       isPositive: true,
@@ -56,7 +59,7 @@ export const Dashboard: React.FC = () => {
       bg: 'bg-blue-50' 
     },
     { 
-      title: 'Total Leads', 
+      title: t('dashboard.stats.total_leads'), 
       value: stats.totalLeads, 
       change: '+24%', 
       isPositive: true,
@@ -65,7 +68,7 @@ export const Dashboard: React.FC = () => {
       bg: 'bg-violet-50' 
     },
     { 
-      title: 'Win Rate', 
+      title: t('dashboard.stats.win_rate'), 
       value: `${stats.winRate}%`, 
       change: '-2.1%', 
       isPositive: false,
@@ -78,8 +81,8 @@ export const Dashboard: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard Overview</h1>
-        <div className="text-sm text-gray-500">Last updated: Today</div>
+        <h1 className="text-2xl font-bold text-gray-900">{t('dashboard.title')}</h1>
+        <div className="text-sm text-gray-500">{t('dashboard.last_updated')}</div>
       </div>
       
       {/* Role-Specific Widgets */}
@@ -87,21 +90,21 @@ export const Dashboard: React.FC = () => {
         <Card className="bg-slate-800 text-white border-none">
           <CardHeader className="pb-2">
             <CardTitle className="text-white flex items-center gap-2">
-              <MdDns className="text-blue-400" /> System Health (Admin View)
+              <MdDns className="text-blue-400" /> {t('dashboard.widgets.system_health')}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-3 gap-4 text-center">
               <div className="p-3 bg-slate-700/50 rounded-lg">
-                <div className="text-xs text-slate-400 mb-1">CPU Usage</div>
+                <div className="text-xs text-slate-400 mb-1">{t('dashboard.widgets.cpu_usage')}</div>
                 <div className="text-xl font-bold text-green-400">12%</div>
               </div>
               <div className="p-3 bg-slate-700/50 rounded-lg">
-                <div className="text-xs text-slate-400 mb-1">Memory</div>
+                <div className="text-xs text-slate-400 mb-1">{t('dashboard.widgets.memory')}</div>
                 <div className="text-xl font-bold text-blue-400">2.4GB</div>
               </div>
               <div className="p-3 bg-slate-700/50 rounded-lg">
-                <div className="text-xs text-slate-400 mb-1">Active Sessions</div>
+                <div className="text-xs text-slate-400 mb-1">{t('dashboard.widgets.active_sessions')}</div>
                 <div className="text-xl font-bold text-purple-400">8</div>
               </div>
             </div>
@@ -113,21 +116,21 @@ export const Dashboard: React.FC = () => {
         <Card className="bg-indigo-50 border-indigo-100">
           <CardHeader className="pb-2">
             <CardTitle className="text-indigo-900 flex items-center gap-2">
-              <MdGroupWork className="text-indigo-600" /> Team Performance (Manager View)
+              <MdGroupWork className="text-indigo-600" /> {t('dashboard.widgets.team_performance')}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
               <div className="flex justify-between items-center text-sm">
-                <span className="text-gray-600">Sales Team A</span>
-                <span className="font-bold text-indigo-700">92% to Target</span>
+                <span className="text-gray-600">{t('dashboard.widgets.team_a')}</span>
+                <span className="font-bold text-indigo-700">92% {t('dashboard.widgets.to_target')}</span>
               </div>
               <div className="h-2 bg-indigo-200 rounded-full overflow-hidden">
                 <div className="h-full bg-indigo-600 w-[92%]"></div>
               </div>
               <div className="flex justify-between items-center text-sm mt-2">
-                <span className="text-gray-600">Sales Team B</span>
-                <span className="font-bold text-indigo-700">78% to Target</span>
+                <span className="text-gray-600">{t('dashboard.widgets.team_b')}</span>
+                <span className="font-bold text-indigo-700">78% {t('dashboard.widgets.to_target')}</span>
               </div>
               <div className="h-2 bg-indigo-200 rounded-full overflow-hidden">
                 <div className="h-full bg-indigo-600 w-[78%]"></div>
@@ -141,7 +144,7 @@ export const Dashboard: React.FC = () => {
         <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white border-none">
           <CardHeader className="pb-2">
             <CardTitle className="text-white flex items-center gap-2">
-              <MdTrackChanges className="text-blue-200" /> My Monthly Target (Sales View)
+              <MdTrackChanges className="text-blue-200" /> {t('dashboard.widgets.my_monthly_target')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -152,7 +155,7 @@ export const Dashboard: React.FC = () => {
             <div className="h-3 bg-blue-800/30 rounded-full overflow-hidden backdrop-blur-sm">
               <div className="h-full bg-white/90 w-[62.5%] shadow-[0_0_10px_rgba(255,255,255,0.5)]"></div>
             </div>
-            <div className="mt-2 text-xs text-blue-100 text-right">62.5% Achieved - Keep pushing!</div>
+            <div className="mt-2 text-xs text-blue-100 text-right">62.5% {t('dashboard.widgets.achieved_msg')}</div>
           </CardContent>
         </Card>
       )}
@@ -166,7 +169,7 @@ export const Dashboard: React.FC = () => {
                 <h3 className="text-2xl font-bold text-gray-900">{stat.value}</h3>
                 <div className={`text-xs font-medium mt-2 flex items-center ${stat.isPositive ? 'text-green-600' : 'text-red-600'}`}>
                   <span>{stat.change}</span>
-                  <span className="ml-1 text-gray-400">vs last month</span>
+                  <span className="ml-1 text-gray-400">{t('dashboard.stats.vs_last_month')}</span>
                 </div>
               </div>
               <div className={`p-3 rounded-lg ${stat.bg} ${stat.color}`}>
@@ -180,7 +183,7 @@ export const Dashboard: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card className="lg:col-span-2 h-full">
           <CardHeader>
-            <CardTitle>Revenue Forecast</CardTitle>
+            <CardTitle>{t('dashboard.charts.revenue_forecast')}</CardTitle>
           </CardHeader>
           <CardContent>
              <div className="h-64 flex items-end justify-between gap-2 mt-4 px-2">
@@ -194,7 +197,7 @@ export const Dashboard: React.FC = () => {
                 ))}
              </div>
              <div className="flex justify-between mt-4 text-xs text-gray-400 uppercase font-medium">
-               {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].map(m => (
+               {(translations[language] as any)['dashboard.charts.months'].map((m: string) => (
                  <span key={m}>{m}</span>
                ))}
              </div>
@@ -203,12 +206,12 @@ export const Dashboard: React.FC = () => {
         
         <Card className="h-full">
           <CardHeader>
-            <CardTitle>Recent Leads</CardTitle>
+            <CardTitle>{t('dashboard.recent_leads.title')}</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
             <div className="divide-y divide-gray-100">
               {recentLeads.length === 0 ? (
-                <div className="p-6 text-center text-gray-500 text-sm">No leads found</div>
+                <div className="p-6 text-center text-gray-500 text-sm">{t('dashboard.recent_leads.no_leads')}</div>
               ) : (
                 recentLeads.map(lead => (
                   <div key={lead.id} className="p-4 hover:bg-gray-50 flex items-center gap-3 transition-colors">
@@ -231,7 +234,7 @@ export const Dashboard: React.FC = () => {
               )}
             </div>
             <div className="p-4 border-t border-gray-100 text-center">
-              <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">View All Leads</button>
+              <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">{t('dashboard.recent_leads.view_all')}</button>
             </div>
           </CardContent>
         </Card>

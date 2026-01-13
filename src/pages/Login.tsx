@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { MdEmail, MdLock, MdDashboard, MdAdminPanelSettings, MdManageAccounts, MdTrendingUp } from 'react-icons/md';
@@ -11,6 +12,7 @@ export const Login: React.FC = () => {
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { login } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -50,9 +52,9 @@ export const Login: React.FC = () => {
             <div className="mb-6 p-4 bg-white/10 rounded-full backdrop-blur-sm">
               <MdDashboard className="w-12 h-12 text-white" />
             </div>
-            <h2 className="text-3xl font-bold mb-4">Manage Your Customer Relationships</h2>
+            <h2 className="text-3xl font-bold mb-4">{t('login.hero_title')}</h2>
             <p className="text-blue-100 text-lg">
-              Boost sales, track leads, and close more deals with our all-in-one CRM solution.
+              {t('login.hero_subtitle')}
             </p>
           </div>
         </div>
@@ -60,27 +62,27 @@ export const Login: React.FC = () => {
         {/* Right Side - Login Form */}
         <div className="w-full md:w-1/2 p-8 md:p-12">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">Welcome Back</h1>
-            <p className="mt-2 text-gray-600">Sign in to your CRM account</p>
+            <h1 className="text-3xl font-bold text-gray-900">{t('login.welcome_back')}</h1>
+            <p className="mt-2 text-gray-600">{t('login.sign_in_subtitle')}</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <Input
-              label="Email Address"
+              label={t('login.email_label')}
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               icon={<MdEmail />}
-              placeholder="Enter your email"
+              placeholder={t('login.email_placeholder')}
               required
             />
             <Input
-              label="Password"
+              label={t('login.password_label')}
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               icon={<MdLock />}
-              placeholder="Enter your password"
+              placeholder={t('login.password_placeholder')}
               required
             />
 
@@ -95,11 +97,11 @@ export const Login: React.FC = () => {
               className="w-full"
               isLoading={isSubmitting}
             >
-              Sign In
+              {t('login.sign_in_button')}
             </Button>
 
             <div className="mt-6 pt-6 border-t border-gray-100">
-              <p className="text-center text-sm text-gray-500 mb-4">Quick Demo Access:</p>
+              <p className="text-center text-sm text-gray-500 mb-4">{t('login.quick_demo')}</p>
               <div className="grid grid-cols-3 gap-2">
                 <button 
                   type="button"
@@ -107,7 +109,7 @@ export const Login: React.FC = () => {
                   className="flex items-center justify-center px-2 py-2 text-xs font-medium bg-blue-50 text-blue-700 rounded hover:bg-blue-100 transition-colors"
                 >
                   <MdAdminPanelSettings className="w-4 h-4 mr-1.5" />
-                  Admin
+                  {t('topbar.role.admin')}
                 </button>
                 <button 
                   type="button"
@@ -115,7 +117,7 @@ export const Login: React.FC = () => {
                   className="flex items-center justify-center px-2 py-2 text-xs font-medium bg-purple-50 text-purple-700 rounded hover:bg-purple-100 transition-colors"
                 >
                   <MdManageAccounts className="w-4 h-4 mr-1.5" />
-                  Manager
+                  {t('topbar.role.manager')}
                 </button>
                 <button 
                   type="button"
@@ -123,7 +125,7 @@ export const Login: React.FC = () => {
                   className="flex items-center justify-center px-2 py-2 text-xs font-medium bg-green-50 text-green-700 rounded hover:bg-green-100 transition-colors"
                 >
                   <MdTrendingUp className="w-4 h-4 mr-1.5" />
-                  Sales
+                  {t('login.role.sales')}
                 </button>
               </div>
             </div>
