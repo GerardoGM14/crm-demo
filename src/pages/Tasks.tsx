@@ -4,6 +4,7 @@ import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Modal } from '../components/ui/Modal';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import { MdAdd, MdSearch, MdEdit, MdDelete, MdCheckCircle, MdRadioButtonUnchecked, MdDateRange, MdFlag } from 'react-icons/md';
 import { storage } from '../utils/storage';
 import type { Task } from '../types';
@@ -11,6 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const Tasks: React.FC = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -77,7 +79,7 @@ export const Tasks: React.FC = () => {
   };
 
   const handleDelete = (id: string) => {
-    if (window.confirm('Are you sure you want to delete this task?')) {
+    if (window.confirm(t('tasks.delete_confirm'))) {
       const updatedTasks = tasks.filter(t => t.id !== id);
       storage.saveAll('TASKS', updatedTasks);
       setTasks(updatedTasks);
@@ -120,10 +122,19 @@ export const Tasks: React.FC = () => {
     }
   };
 
+  const getPriorityLabel = (priority: string) => {
+    switch (priority) {
+      case 'HIGH': return t('tasks.priority.high');
+      case 'MEDIUM': return t('tasks.priority.medium');
+      case 'LOW': return t('tasks.priority.low');
+      default: return priority;
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h1 className="text-2xl font-bold text-gray-900">Tasks</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t('tasks.title')}</h1>
         <div className="flex gap-2">
           {/* Admin/Manager Filter Toggle */}
           {(user?.role === 'ADMIN' || user?.role === 'MANAGER') && (
@@ -134,7 +145,7 @@ export const Tasks: React.FC = () => {
                   filterType === 'MY' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'
                 }`}
               >
-                My Tasks
+                {t('tasks.filter.my')}
               </button>
               <button
                 onClick={() => setFilterType('ALL')}
@@ -142,11 +153,11 @@ export const Tasks: React.FC = () => {
                   filterType === 'ALL' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'
                 }`}
               >
-                All Tasks
+                {t('tasks.filter.all')}
               </button>
             </div>
           )}
-          <Button onClick={() => handleOpenModal()} icon={<MdAdd />}>Add Task</Button>
+          <Button onClick={() => handleOpenModal()} icon={<MdAdd />}>{t('tasks.add')}</Button>
         </div>
       </div>
 
@@ -154,7 +165,7 @@ export const Tasks: React.FC = () => {
         <CardHeader className="flex flex-col sm:flex-row justify-between items-center gap-4">
           <div className="w-full sm:w-72">
             <Input 
-              placeholder="Search tasks..." 
+              placeholder={t('tasks.search_placeholder')} 
               icon={<MdSearch />} 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -165,7 +176,7 @@ export const Tasks: React.FC = () => {
           <div className="divide-y divide-gray-100">
             {filteredTasks.length === 0 ? (
                <div className="p-8 text-center text-gray-500">
-                 No tasks found. Create a new task to get organized!
+                 {t('tasks.no_tasks')}
                </div>
             ) : (
               filteredTasks.map((task) => (
@@ -183,13 +194,13 @@ export const Tasks: React.FC = () => {
                         {task.title}
                       </h3>
                       <span className={`text-xs px-2 py-0.5 rounded font-medium flex items-center gap-1 ${getPriorityColor(task.priority)}`}>
-                        <MdFlag className="w-3 h-3" /> {task.priority}
+                        <MdFlag className="w-3 h-3" /> {getPriorityLabel(task.priority)}
                       </span>
                     </div>
                     {task.description && <p className="text-sm text-gray-500 mb-2">{task.description}</p>}
                     <div className="flex items-center gap-4 text-xs text-gray-400">
                       <span className="flex items-center gap-1">
-                        <MdDateRange /> Due: {task.dueDate}
+                        <MdDateRange /> {t('tasks.due')} {task.dueDate}
                       </span>
                     </div>
                   </div>
@@ -208,18 +219,18 @@ export const Tasks: React.FC = () => {
       <Modal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        title={editingTask ? 'Edit Task' : 'Add New Task'}
+        title={editingTask ? t('tasks.modal.title.edit') : t('tasks.modal.title.new')}
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
-            label="Title"
+            label={t('tasks.form.title')}
             value={formData.title}
             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
             required
           />
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('tasks.form.description')}</label>
             <textarea
               className="block w-full rounded-lg border-gray-300 border shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2"
               rows={3}
@@ -231,29 +242,29 @@ export const Tasks: React.FC = () => {
           <div className="grid grid-cols-2 gap-4">
             <Input
               type="date"
-              label="Due Date"
+              label={t('tasks.form.dueDate')}
               value={formData.dueDate}
               onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
               required
             />
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Priority</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('tasks.form.priority')}</label>
               <select
                 className="block w-full rounded-lg border-gray-300 border shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2.5"
                 value={formData.priority}
                 onChange={(e) => setFormData({ ...formData, priority: e.target.value as any })}
               >
-                <option value="LOW">Low</option>
-                <option value="MEDIUM">Medium</option>
-                <option value="HIGH">High</option>
+                <option value="LOW">{t('tasks.priority.low')}</option>
+                <option value="MEDIUM">{t('tasks.priority.medium')}</option>
+                <option value="HIGH">{t('tasks.priority.high')}</option>
               </select>
             </div>
           </div>
 
           <div className="flex justify-end gap-3 mt-6">
-            <Button type="button" variant="ghost" onClick={handleCloseModal}>Cancel</Button>
-            <Button type="submit">{editingTask ? 'Save Changes' : 'Create Task'}</Button>
+            <Button type="button" variant="ghost" onClick={handleCloseModal}>{t('common.cancel')}</Button>
+            <Button type="submit">{editingTask ? t('tasks.save_changes') : t('tasks.save_create')}</Button>
           </div>
         </form>
       </Modal>

@@ -8,8 +8,10 @@ import { MdAdd, MdSearch, MdEdit, MdDelete, MdPhone, MdEmail } from 'react-icons
 import { storage } from '../utils/storage';
 import type { Lead } from '../types';
 import { v4 as uuidv4 } from 'uuid';
+import { useLanguage } from '../context/LanguageContext';
 
 export const Leads: React.FC = () => {
+  const { t } = useLanguage();
   const [leads, setLeads] = useState<Lead[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -71,7 +73,7 @@ export const Leads: React.FC = () => {
   };
 
   const handleDelete = (id: string) => {
-    if (window.confirm('Are you sure you want to delete this lead?')) {
+    if (window.confirm(t('leads.delete_confirm'))) {
       const updatedLeads = leads.filter(l => l.id !== id);
       storage.saveAll(storage.KEYS.LEADS, updatedLeads);
       loadLeads();
@@ -86,10 +88,10 @@ export const Leads: React.FC = () => {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'NEW': return <Badge variant="info">New</Badge>;
-      case 'CONTACTED': return <Badge variant="warning">Contacted</Badge>;
-      case 'QUALIFIED': return <Badge variant="success">Qualified</Badge>;
-      case 'LOST': return <Badge variant="error">Lost</Badge>;
+      case 'NEW': return <Badge variant="info">{t('leads.status.new')}</Badge>;
+      case 'CONTACTED': return <Badge variant="warning">{t('leads.status.contacted')}</Badge>;
+      case 'QUALIFIED': return <Badge variant="success">{t('leads.status.qualified')}</Badge>;
+      case 'LOST': return <Badge variant="error">{t('leads.status.lost')}</Badge>;
       default: return <Badge>Unknown</Badge>;
     }
   };
@@ -97,15 +99,15 @@ export const Leads: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h1 className="text-2xl font-bold text-gray-900">Leads Management</h1>
-        <Button onClick={() => handleOpenModal()} icon={<MdAdd />}>Add Lead</Button>
+        <h1 className="text-2xl font-bold text-gray-900">{t('leads.title')}</h1>
+        <Button onClick={() => handleOpenModal()} icon={<MdAdd />}>{t('leads.add')}</Button>
       </div>
 
       <Card>
         <CardHeader className="flex flex-col sm:flex-row justify-between items-center gap-4">
           <div className="w-full sm:w-72">
             <Input 
-              placeholder="Search leads..." 
+              placeholder={t('leads.search_placeholder')}
               icon={<MdSearch />} 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -116,18 +118,18 @@ export const Leads: React.FC = () => {
           <table className="w-full text-left text-sm text-gray-600">
             <thead className="bg-gray-50 text-xs uppercase font-semibold text-gray-500">
               <tr>
-                <th className="px-6 py-4">Name</th>
-                <th className="px-6 py-4">Contact</th>
-                <th className="px-6 py-4">Company</th>
-                <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4 text-right">Actions</th>
+                <th className="px-6 py-4">{t('leads.table.name')}</th>
+                <th className="px-6 py-4">{t('leads.table.contact')}</th>
+                <th className="px-6 py-4">{t('leads.table.company')}</th>
+                <th className="px-6 py-4">{t('leads.table.status')}</th>
+                <th className="px-6 py-4 text-right">{t('leads.table.actions')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {filteredLeads.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
-                    No leads found. Add one to get started!
+                    {t('leads.no_leads')}
                   </td>
                 </tr>
               ) : (
@@ -163,49 +165,49 @@ export const Leads: React.FC = () => {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingLead ? 'Edit Lead' : 'Add New Lead'}
+        title={editingLead ? t('leads.modal.title.edit') : t('leads.modal.title.new')}
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
-            label="Full Name"
+            label={t('leads.form.fullname')}
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             required
           />
           <Input
-            label="Email"
+            label={t('leads.form.email')}
             type="email"
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             required
           />
           <Input
-            label="Phone"
+            label={t('leads.form.phone')}
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
           />
           <Input
-            label="Company"
+            label={t('leads.form.company')}
             value={formData.company}
             onChange={(e) => setFormData({ ...formData, company: e.target.value })}
             required
           />
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('leads.form.status')}</label>
             <select
               className="block w-full rounded-lg border-gray-300 border shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm py-2 px-3"
               value={formData.status}
               onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
             >
-              <option value="NEW">New</option>
-              <option value="CONTACTED">Contacted</option>
-              <option value="QUALIFIED">Qualified</option>
-              <option value="LOST">Lost</option>
+              <option value="NEW">{t('leads.status.new')}</option>
+              <option value="CONTACTED">{t('leads.status.contacted')}</option>
+              <option value="QUALIFIED">{t('leads.status.qualified')}</option>
+              <option value="LOST">{t('leads.status.lost')}</option>
             </select>
           </div>
           <div className="flex justify-end gap-3 pt-4">
-            <Button type="button" variant="secondary" onClick={() => setIsModalOpen(false)}>Cancel</Button>
-            <Button type="submit">Save Lead</Button>
+            <Button type="button" variant="secondary" onClick={() => setIsModalOpen(false)}>{t('common.cancel')}</Button>
+            <Button type="submit">{t('leads.save_button')}</Button>
           </div>
         </form>
       </Modal>

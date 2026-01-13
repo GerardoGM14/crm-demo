@@ -1,47 +1,50 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
 import { storage } from '../utils/storage';
+import { useLanguage } from '../context/LanguageContext';
 import type { Lead, Opportunity } from '../types';
 
 export const Reports: React.FC = () => {
+  const { t } = useLanguage();
   const leads = storage.getAll<Lead>(storage.KEYS.LEADS);
   const opportunities = storage.getAll<Opportunity>(storage.KEYS.OPPORTUNITIES);
 
   // Funnel Data
   const funnelData = [
-    { label: 'Total Leads', value: leads.length, color: 'bg-blue-500', width: '100%' },
-    { label: 'Contacted', value: leads.filter(l => l.status !== 'NEW').length, color: 'bg-blue-600', width: '80%' },
-    { label: 'Qualified', value: leads.filter(l => l.status === 'QUALIFIED').length, color: 'bg-blue-700', width: '60%' },
-    { label: 'Opportunities', value: opportunities.length, color: 'bg-blue-800', width: '40%' },
-    { label: 'Won Deals', value: opportunities.filter(o => o.stage === 'CLOSED_WON').length, color: 'bg-blue-900', width: '20%' },
+    { label: t('reports.funnel.total_leads'), value: leads.length, color: 'bg-blue-500', width: '100%' },
+    { label: t('reports.funnel.contacted'), value: leads.filter(l => l.status !== 'NEW').length, color: 'bg-blue-600', width: '80%' },
+    { label: t('reports.funnel.qualified'), value: leads.filter(l => l.status === 'QUALIFIED').length, color: 'bg-blue-700', width: '60%' },
+    { label: t('reports.funnel.opportunities'), value: opportunities.length, color: 'bg-blue-800', width: '40%' },
+    { label: t('reports.funnel.won_deals'), value: opportunities.filter(o => o.stage === 'CLOSED_WON').length, color: 'bg-blue-900', width: '20%' },
   ];
 
   // Revenue by Month (Mock + Real Data hybrid)
+  const months = t('dashboard.charts.months') as string[];
   const revenueData = [
-    { month: 'Jan', value: 45000 },
-    { month: 'Feb', value: 52000 },
-    { month: 'Mar', value: 48000 },
-    { month: 'Apr', value: 61000 },
-    { month: 'May', value: 55000 },
-    { month: 'Jun', value: 67000 },
-    { month: 'Jul', value: 72000 },
-    { month: 'Aug', value: 68000 },
-    { month: 'Sep', value: 78000 },
-    { month: 'Oct', value: 85000 }, // Current month boost
-    { month: 'Nov', value: 20000 }, // Partial
-    { month: 'Dec', value: 0 },
+    { month: months[0], value: 45000 },
+    { month: months[1], value: 52000 },
+    { month: months[2], value: 48000 },
+    { month: months[3], value: 61000 },
+    { month: months[4], value: 55000 },
+    { month: months[5], value: 67000 },
+    { month: months[6], value: 72000 },
+    { month: months[7], value: 68000 },
+    { month: months[8], value: 78000 },
+    { month: months[9], value: 85000 }, // Current month boost
+    { month: months[10], value: 20000 }, // Partial
+    { month: months[11], value: 0 },
   ];
 
   const maxRevenue = Math.max(...revenueData.map(d => d.value));
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Reports & Analytics</h1>
+      <h1 className="text-2xl font-bold text-gray-900">{t('reports.title')}</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>Sales Funnel</CardTitle>
+            <CardTitle>{t('reports.funnel.title')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4 py-4">
@@ -67,7 +70,7 @@ export const Reports: React.FC = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Revenue Trend (YTD)</CardTitle>
+            <CardTitle>{t('reports.revenue.title')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="h-80 flex items-end justify-between gap-2 px-2 pt-4">
@@ -95,22 +98,22 @@ export const Reports: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card>
           <CardHeader>
-             <CardTitle>Lead Sources</CardTitle>
+             <CardTitle>{t('reports.sources.title')}</CardTitle>
           </CardHeader>
           <CardContent className="flex justify-center py-6">
              {/* Simple Pie Chart Representation */}
              <div className="w-48 h-48 rounded-full border-[16px] border-blue-500 border-t-green-500 border-r-purple-500 relative">
                <div className="absolute inset-0 flex items-center justify-center flex-col">
-                 <span className="text-2xl font-bold text-gray-900">Total</span>
-                 <span className="text-sm text-gray-500">{leads.length} Leads</span>
+                 <span className="text-2xl font-bold text-gray-900">{t('reports.sources.total')}</span>
+                 <span className="text-sm text-gray-500">{leads.length} {t('reports.sources.leads')}</span>
                </div>
              </div>
           </CardContent>
           <div className="px-6 pb-6 grid grid-cols-2 gap-2 text-xs">
-            <div className="flex items-center gap-2"><div className="w-3 h-3 bg-blue-500 rounded-full"></div> Organic Search</div>
-            <div className="flex items-center gap-2"><div className="w-3 h-3 bg-green-500 rounded-full"></div> Referrals</div>
-            <div className="flex items-center gap-2"><div className="w-3 h-3 bg-purple-500 rounded-full"></div> Social Media</div>
-            <div className="flex items-center gap-2"><div className="w-3 h-3 bg-gray-200 rounded-full"></div> Others</div>
+            <div className="flex items-center gap-2"><div className="w-3 h-3 bg-blue-500 rounded-full"></div> {t('reports.sources.organic')}</div>
+            <div className="flex items-center gap-2"><div className="w-3 h-3 bg-green-500 rounded-full"></div> {t('reports.sources.referrals')}</div>
+            <div className="flex items-center gap-2"><div className="w-3 h-3 bg-purple-500 rounded-full"></div> {t('reports.sources.social')}</div>
+            <div className="flex items-center gap-2"><div className="w-3 h-3 bg-gray-200 rounded-full"></div> {t('reports.sources.others')}</div>
           </div>
         </Card>
         

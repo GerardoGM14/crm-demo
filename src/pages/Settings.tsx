@@ -19,7 +19,7 @@ export const Settings: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    alert('Settings updated successfully! (Demo mode)');
+    alert(t('settings.alert.success'));
   };
 
   return (
@@ -71,7 +71,7 @@ export const Settings: React.FC = () => {
                   <div className="flex items-center gap-4 mb-6">
                     <img 
                       src={user?.avatar || `https://ui-avatars.com/api/?name=${user?.name}`} 
-                      alt="Profile" 
+                      alt={t('settings.profile.avatar_alt')} 
                       className="w-20 h-20 rounded-full"
                     />
                     <div>
@@ -162,7 +162,7 @@ export const Settings: React.FC = () => {
           {activeTab === 'logs' && user?.role === 'ADMIN' && (
             <Card>
               <CardHeader>
-                <CardTitle>{t('settings.tab.system_logs')} (Admin Only)</CardTitle>
+                <CardTitle>{t('settings.tab.system_logs')} {t('settings.logs.admin_only')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -170,9 +170,9 @@ export const Settings: React.FC = () => {
                     <div key={i} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg text-sm">
                       <div className="w-2 h-2 mt-1.5 rounded-full bg-blue-500 flex-shrink-0"></div>
                       <div>
-                        <p className="font-medium text-gray-900">User Login Activity</p>
-                        <p className="text-gray-500">User {user?.name} logged in successfully.</p>
-                        <p className="text-xs text-gray-400 mt-1">{new Date().toLocaleString()}</p>
+                        <p className="font-medium text-gray-900">{t('settings.logs.login_activity')}</p>
+                        <p className="text-gray-500">User {user?.name} {t('settings.logs.login_success')}</p>
+                        <p className="text-xs text-gray-400 mt-1">{new Date().toLocaleString(language === 'es' ? 'es-ES' : 'en-US')}</p>
                       </div>
                     </div>
                   ))}

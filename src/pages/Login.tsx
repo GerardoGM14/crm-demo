@@ -28,10 +28,10 @@ export const Login: React.FC = () => {
       if (success) {
         navigate(from, { replace: true });
       } else {
-        setError('Invalid credentials. Try admin@crm.com');
+        setError(t('login.error.invalid'));
       }
     } catch (err) {
-      setError('An error occurred during login');
+      setError(t('login.error.generic'));
     } finally {
       setIsSubmitting(false);
     }
@@ -45,7 +45,7 @@ export const Login: React.FC = () => {
         <div className="w-full md:w-1/2 relative bg-blue-600 hidden md:block">
           <img 
             src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80" 
-            alt="CRM Dashboard" 
+            alt={t('login.hero_alt')} 
             className="absolute inset-0 w-full h-full object-cover opacity-90"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-blue-900/90 to-blue-800/50 flex flex-col items-center justify-center text-white p-12 text-center">

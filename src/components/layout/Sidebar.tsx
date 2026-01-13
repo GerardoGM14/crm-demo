@@ -59,7 +59,9 @@ export const Sidebar: React.FC = () => {
           />
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-gray-900 truncate">{user?.name}</p>
-            <p className="text-xs text-gray-500 truncate capitalize">{user?.role.toLowerCase()}</p>
+            <p className="text-xs text-gray-500 truncate capitalize">
+              {user?.role ? t(`topbar.role.${user.role.toLowerCase()}`) : ''}
+            </p>
           </div>
         </div>
       </div>

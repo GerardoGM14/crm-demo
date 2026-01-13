@@ -4,7 +4,7 @@ import { translations, type Language } from '../utils/translations';
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
-  t: (key: string) => string;
+  t: (key: string) => any;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -26,19 +26,10 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     localStorage.setItem('crm_language', lang);
   };
 
-  const t = (key: string): string => {
-    const keys = key.split('.');
-    let value: any = translations[language];
-    
-    for (const k of keys) {
-      if (value && typeof value === 'object' && k in value) {
-        value = value[k as keyof typeof value];
-      } else {
-        return key; // Return the key if translation is not found
-      }
-    }
-    
-    return typeof value === 'string' ? value : key;
+  const t = (key: string): any => {
+    const langTranslations = translations[language];
+    // @ts-ignore - Dynamic key access
+    return langTranslations[key as keyof typeof langTranslations] || key;
   };
 
   return (

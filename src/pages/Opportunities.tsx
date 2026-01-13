@@ -6,8 +6,10 @@ import { MdAdd, MdEdit, MdDelete, MdAttachMoney, MdCalendarToday } from 'react-i
 import { storage } from '../utils/storage';
 import type { Opportunity } from '../types';
 import { v4 as uuidv4 } from 'uuid';
+import { useLanguage } from '../context/LanguageContext';
 
 export const Opportunities: React.FC = () => {
+  const { t } = useLanguage();
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -21,10 +23,10 @@ export const Opportunities: React.FC = () => {
   });
 
   const stages: { key: Opportunity['stage']; label: string; color: string }[] = [
-    { key: 'PROSPECTING', label: 'Prospecting', color: 'bg-blue-100 text-blue-800' },
-    { key: 'NEGOTIATION', label: 'Negotiation', color: 'bg-yellow-100 text-yellow-800' },
-    { key: 'CLOSED_WON', label: 'Closed Won', color: 'bg-green-100 text-green-800' },
-    { key: 'CLOSED_LOST', label: 'Closed Lost', color: 'bg-red-100 text-red-800' },
+    { key: 'PROSPECTING', label: t('opportunities.stage.prospecting'), color: 'bg-blue-100 text-blue-800' },
+    { key: 'NEGOTIATION', label: t('opportunities.stage.negotiation'), color: 'bg-yellow-100 text-yellow-800' },
+    { key: 'CLOSED_WON', label: t('opportunities.stage.closed_won'), color: 'bg-green-100 text-green-800' },
+    { key: 'CLOSED_LOST', label: t('opportunities.stage.closed_lost'), color: 'bg-red-100 text-red-800' },
   ];
 
   useEffect(() => {
@@ -74,7 +76,7 @@ export const Opportunities: React.FC = () => {
   };
 
   const handleDelete = (id: string) => {
-    if (window.confirm('Delete this opportunity?')) {
+    if (window.confirm(t('opportunities.delete_confirm'))) {
       const updatedOpps = opportunities.filter(o => o.id !== id);
       storage.saveAll(storage.KEYS.OPPORTUNITIES, updatedOpps);
       setOpportunities(updatedOpps);
@@ -104,8 +106,8 @@ export const Opportunities: React.FC = () => {
   return (
     <div className="h-[calc(100vh-8rem)] flex flex-col">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Opportunities Pipeline</h1>
-        <Button onClick={() => handleOpenModal()} icon={<MdAdd />}>Add Deal</Button>
+        <h1 className="text-2xl font-bold text-gray-900">{t('opportunities.title')}</h1>
+        <Button onClick={() => handleOpenModal()} icon={<MdAdd />}>{t('opportunities.add')}</Button>
       </div>
 
       <div className="flex-1 overflow-x-auto">
@@ -170,21 +172,21 @@ export const Opportunities: React.FC = () => {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingId ? 'Edit Deal' : 'New Deal'}
+        title={editingId ? t('opportunities.modal.title.edit') : t('opportunities.modal.title.new')}
       >
         <form onSubmit={handleSave} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Deal Title</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('opportunities.form.title')}</label>
             <Input
               required
               value={formData.title}
               onChange={e => setFormData({ ...formData, title: e.target.value })}
-              placeholder="e.g. Enterprise License"
+              placeholder={t('opportunities.form.title_placeholder')}
             />
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Value ($)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('opportunities.form.value')}</label>
             <Input
               type="number"
               required
@@ -194,7 +196,7 @@ export const Opportunities: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Stage</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('opportunities.form.stage')}</label>
             <select
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={formData.stage}
@@ -207,7 +209,7 @@ export const Opportunities: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Expected Close Date</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('opportunities.form.date')}</label>
             <Input
               type="date"
               required
@@ -217,8 +219,8 @@ export const Opportunities: React.FC = () => {
           </div>
 
           <div className="flex justify-end gap-2 mt-6">
-            <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)}>Cancel</Button>
-            <Button type="submit">Save Deal</Button>
+            <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)}>{t('common.cancel')}</Button>
+            <Button type="submit">{t('opportunities.save_button')}</Button>
           </div>
         </form>
       </Modal>

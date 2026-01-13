@@ -3,10 +3,13 @@ import { Card, CardContent } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { MdChevronLeft, MdChevronRight, MdToday } from 'react-icons/md';
 import { storage } from '../utils/storage';
+import { useLanguage } from '../context/LanguageContext';
 import type { Task, Opportunity } from '../types';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, isToday } from 'date-fns';
+import { es, enUS } from 'date-fns/locale';
 
 export const Calendar: React.FC = () => {
+  const { t, language } = useLanguage();
   const [currentDate, setCurrentDate] = useState(new Date());
   const tasks = storage.getAll<Task>(storage.KEYS.TASKS);
   const opportunities = storage.getAll<Opportunity>(storage.KEYS.OPPORTUNITIES);
@@ -19,7 +22,15 @@ export const Calendar: React.FC = () => {
   const dateFormat = "d";
   const days = eachDayOfInterval({ start: startDate, end: endDate });
 
-  const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const weekDays = [
+    t('calendar.weekdays.sun'),
+    t('calendar.weekdays.mon'),
+    t('calendar.weekdays.tue'),
+    t('calendar.weekdays.wed'),
+    t('calendar.weekdays.thu'),
+    t('calendar.weekdays.fri'),
+    t('calendar.weekdays.sat')
+  ];
 
   const nextMonth = () => setCurrentDate(addMonths(currentDate, 1));
   const prevMonth = () => setCurrentDate(subMonths(currentDate, 1));
@@ -34,14 +45,14 @@ export const Calendar: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-        <h1 className="text-2xl font-bold text-gray-900">Calendar</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t('calendar.title')}</h1>
         <div className="flex items-center gap-2">
           <Button variant="ghost" onClick={prevMonth} icon={<MdChevronLeft />} />
-          <span className="text-lg font-semibold w-32 text-center">
-            {format(currentDate, 'MMMM yyyy')}
+          <span className="text-lg font-semibold w-32 text-center capitalize">
+            {format(currentDate, 'MMMM yyyy', { locale: language === 'es' ? es : enUS })}
           </span>
           <Button variant="ghost" onClick={nextMonth} icon={<MdChevronRight />} />
-          <Button variant="outline" size="sm" onClick={goToToday} className="ml-2" icon={<MdToday />}>Today</Button>
+          <Button variant="outline" size="sm" onClick={goToToday} className="ml-2" icon={<MdToday />}>{t('calendar.today')}</Button>
         </div>
       </div>
 

@@ -4,9 +4,11 @@ import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { MdSearch, MdStarBorder, MdDelete, MdReply, MdArchive, MdMarkEmailRead } from 'react-icons/md';
 import { storage } from '../utils/storage';
+import { useLanguage } from '../context/LanguageContext';
 import type { Message } from '../types';
 
 export const Messages: React.FC = () => {
+  const { t, language } = useLanguage();
   const [messages, setMessages] = useState<Message[]>([]);
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -44,14 +46,14 @@ export const Messages: React.FC = () => {
 
   return (
     <div className="h-[calc(100vh-8rem)] flex flex-col">
-      <h1 className="text-2xl font-bold text-gray-900 mb-4">Messages</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-4">{t('messages.title')}</h1>
       
       <Card className="flex-1 flex overflow-hidden">
         {/* Message List */}
         <div className={`w-full md:w-1/3 border-r border-gray-100 flex flex-col ${selectedMessage ? 'hidden md:flex' : 'flex'}`}>
           <div className="p-4 border-b border-gray-100">
             <Input 
-              placeholder="Search messages..." 
+              placeholder={t('messages.search_placeholder')} 
               icon={<MdSearch />} 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -59,7 +61,7 @@ export const Messages: React.FC = () => {
           </div>
           <div className="flex-1 overflow-y-auto">
             {filteredMessages.length === 0 ? (
-               <div className="p-8 text-center text-gray-500 text-sm">No messages found</div>
+               <div className="p-8 text-center text-gray-500 text-sm">{t('messages.no_messages')}</div>
             ) : (
               filteredMessages.map(message => (
                 <div 
@@ -73,7 +75,7 @@ export const Messages: React.FC = () => {
                   <div className="flex justify-between items-start mb-1">
                     <span className="truncate font-medium">{message.from}</span>
                     <span className="text-xs text-gray-400 whitespace-nowrap ml-2">
-                      {new Date(message.date).toLocaleDateString()}
+                      {new Date(message.date).toLocaleDateString(language === 'es' ? 'es-ES' : 'en-US')}
                     </span>
                   </div>
                   <div className="text-sm truncate mb-1">{message.subject}</div>
@@ -100,9 +102,9 @@ export const Messages: React.FC = () => {
                   <div>
                     <h2 className="text-xl font-bold text-gray-900">{selectedMessage.subject}</h2>
                     <div className="text-sm text-gray-500">
-                      From: <span className="font-medium text-gray-900">{selectedMessage.from}</span>
+                      {t('messages.from')} <span className="font-medium text-gray-900">{selectedMessage.from}</span>
                       <span className="mx-2">•</span>
-                      {new Date(selectedMessage.date).toLocaleString()}
+                      {new Date(selectedMessage.date).toLocaleString(language === 'es' ? 'es-ES' : 'en-US')}
                     </div>
                   </div>
                 </div>
@@ -120,14 +122,14 @@ export const Messages: React.FC = () => {
               </div>
 
               <div className="p-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-2">
-                 <Button variant="outline" onClick={() => setSelectedMessage(null)} className="md:hidden">Back</Button>
-                 <Button icon={<MdReply />}>Reply</Button>
+                 <Button variant="outline" onClick={() => setSelectedMessage(null)} className="md:hidden">{t('messages.back')}</Button>
+                 <Button icon={<MdReply />}>{t('messages.reply')}</Button>
               </div>
             </>
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center text-gray-400">
               <MdMarkEmailRead className="w-16 h-16 mb-4 opacity-20" />
-              <p>Select a message to read</p>
+              <p>{t('messages.select_prompt')}</p>
             </div>
           )}
         </div>
