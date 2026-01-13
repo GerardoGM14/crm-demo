@@ -1,4 +1,4 @@
-import type { User, Lead, Opportunity, Activity } from '../types';
+import type { User, Lead, Opportunity } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 
 const STORAGE_KEYS = {

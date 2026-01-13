@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Modal } from '../components/ui/Modal';
-import { Badge } from '../components/ui/Badge';
 import { MdAdd, MdEdit, MdDelete, MdAttachMoney, MdCalendarToday } from 'react-icons/md';
 import { storage } from '../utils/storage';
 import type { Opportunity } from '../types';

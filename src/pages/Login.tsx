@@ -4,7 +4,6 @@ import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { MdEmail, MdLock, MdDashboard, MdAdminPanelSettings, MdManageAccounts, MdTrendingUp } from 'react-icons/md';
-import { Card, CardContent } from '../components/ui/Card';
 
 export const Login: React.FC = () => {
   const [email, setEmail] = useState('admin@crm.com');

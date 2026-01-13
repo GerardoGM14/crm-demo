@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent } from '../components/ui/Card';
+import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
-import { MdSearch, MdStar, MdStarBorder, MdDelete, MdReply, MdArchive, MdMarkEmailRead } from 'react-icons/md';
+import { MdSearch, MdStarBorder, MdDelete, MdReply, MdArchive, MdMarkEmailRead } from 'react-icons/md';
 import { storage } from '../utils/storage';
 import type { Message } from '../types';
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
+import { Card, CardContent } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { MdChevronLeft, MdChevronRight, MdToday } from 'react-icons/md';
 import { storage } from '../utils/storage';
@@ -55,7 +55,7 @@ export const Calendar: React.FC = () => {
             ))}
           </div>
           <div className="grid grid-cols-7 auto-rows-fr bg-gray-200 gap-px border-b border-gray-200">
-            {days.map((day, i) => {
+            {days.map((day) => {
               const events = getEventsForDay(day);
               return (
                 <div 
