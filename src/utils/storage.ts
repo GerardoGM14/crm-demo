@@ -15,7 +15,7 @@ const STORAGE_KEYS = {
 // Mock Initial Data
 const INITIAL_USERS: User[] = [
   { id: '1', name: 'Admin User', email: 'admin@crm.com', role: 'ADMIN', avatar: 'https://ui-avatars.com/api/?name=Admin+User&background=0D8ABC&color=fff' },
-  { id: '2', name: 'Dr. Roberto Gomez', email: 'director@clinic.com', role: 'DOCTOR', specialty: 'Cardiology', avatar: 'https://ui-avatars.com/api/?name=Roberto+Gomez&background=random' },
+  { id: '2', name: 'Dr. Roberto Gomez', email: 'director@clinic.com', role: 'MANAGER', specialty: 'Cardiology', avatar: 'https://ui-avatars.com/api/?name=Roberto+Gomez&background=random' },
   { id: '3', name: 'Dr. Ana Martinez', email: 'ana@clinic.com', role: 'DOCTOR', specialty: 'Pediatrics', avatar: 'https://ui-avatars.com/api/?name=Ana+Martinez&background=random' },
   { id: '4', name: 'Nurse Julia', email: 'julia@clinic.com', role: 'NURSE', avatar: 'https://ui-avatars.com/api/?name=Julia+R&background=random' },
 ];

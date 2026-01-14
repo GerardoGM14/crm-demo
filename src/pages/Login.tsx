@@ -113,7 +113,7 @@ export const Login: React.FC = () => {
                 </button>
                 <button 
                   type="button"
-                  onClick={() => { setEmail('manager@crm.com'); setPassword('password'); }}
+                  onClick={() => { setEmail('director@clinic.com'); setPassword('password'); }}
                   className="flex items-center justify-center px-2 py-2 text-xs font-medium bg-purple-50 text-purple-700 rounded hover:bg-purple-100 transition-colors"
                 >
                   <MdManageAccounts className="w-4 h-4 mr-1.5" />
@@ -121,7 +121,7 @@ export const Login: React.FC = () => {
                 </button>
                 <button 
                   type="button"
-                  onClick={() => { setEmail('sales@crm.com'); setPassword('password'); }}
+                  onClick={() => { setEmail('ana@clinic.com'); setPassword('password'); }}
                   className="flex items-center justify-center px-2 py-2 text-xs font-medium bg-green-50 text-green-700 rounded hover:bg-green-100 transition-colors"
                 >
                   <MdTrendingUp className="w-4 h-4 mr-1.5" />
