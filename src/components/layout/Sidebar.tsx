@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
-import { MdDashboard, MdPeople, MdAttachMoney, MdSettings, MdPerson, MdTask, MdCalendarToday, MdBarChart, MdEmail, MdHelp } from 'react-icons/md';
+import { MdDashboard, MdEventNote, MdSettings, MdPerson, MdTask, MdCalendarToday, MdBarChart, MdEmail, MdHelp, MdLocalHospital } from 'react-icons/md';
 import { cn } from '../../utils/cn';
 
 export const Sidebar: React.FC = () => {
@@ -10,23 +10,27 @@ export const Sidebar: React.FC = () => {
   const { t } = useLanguage();
 
   const navItems = [
-    { name: t('nav.dashboard'), path: '/', icon: MdDashboard, roles: ['ADMIN', 'MANAGER', 'SALES'] },
-    { name: t('nav.leads'), path: '/leads', icon: MdPeople, roles: ['ADMIN', 'MANAGER', 'SALES'] },
-    { name: t('nav.opportunities'), path: '/opportunities', icon: MdAttachMoney, roles: ['ADMIN', 'MANAGER', 'SALES'] },
-    { name: t('nav.tasks'), path: '/tasks', icon: MdTask, roles: ['ADMIN', 'MANAGER', 'SALES'] },
-    { name: t('nav.calendar'), path: '/calendar', icon: MdCalendarToday, roles: ['ADMIN', 'MANAGER', 'SALES'] },
-    { name: t('nav.reports'), path: '/reports', icon: MdBarChart, roles: ['ADMIN', 'MANAGER'] },
-    { name: t('nav.messages'), path: '/messages', icon: MdEmail, roles: ['ADMIN', 'MANAGER', 'SALES'] },
-    { name: t('nav.users'), path: '/users', icon: MdPerson, roles: ['ADMIN'] },
-    { name: t('nav.settings'), path: '/settings', icon: MdSettings, roles: ['ADMIN', 'MANAGER', 'SALES'] },
-    { name: t('nav.help'), path: '/help', icon: MdHelp, roles: ['ADMIN', 'MANAGER', 'SALES'] },
+    { name: t('nav.dashboard'), path: '/', icon: MdDashboard, roles: ['ADMIN', 'MANAGER', 'DOCTOR', 'NURSE'] },
+    { name: t('nav.patients'), path: '/patients', icon: MdPerson, roles: ['ADMIN', 'MANAGER', 'DOCTOR', 'NURSE'] }, // Patients
+    { name: t('nav.appointments'), path: '/appointments', icon: MdEventNote, roles: ['ADMIN', 'MANAGER', 'DOCTOR', 'NURSE'] }, // Appointments
+    { name: t('nav.tasks'), path: '/tasks', icon: MdTask, roles: ['ADMIN', 'MANAGER', 'DOCTOR', 'NURSE'] },
+    { name: t('nav.calendar'), path: '/calendar', icon: MdCalendarToday, roles: ['ADMIN', 'MANAGER', 'DOCTOR', 'NURSE'] },
+    { name: t('nav.reports'), path: '/reports', icon: MdBarChart, roles: ['ADMIN', 'MANAGER', 'DOCTOR'] },
+    { name: t('nav.messages'), path: '/messages', icon: MdEmail, roles: ['ADMIN', 'MANAGER', 'DOCTOR', 'NURSE'] },
+    { name: t('nav.users'), path: '/users', icon: MdLocalHospital, roles: ['ADMIN'] },
+    { name: t('nav.settings'), path: '/settings', icon: MdSettings, roles: ['ADMIN', 'MANAGER', 'DOCTOR', 'NURSE'] },
+    { name: t('nav.help'), path: '/help', icon: MdHelp, roles: ['ADMIN', 'MANAGER', 'DOCTOR', 'NURSE'] },
   ];
+
+  // Helper to map old roles to new ones for display logic if needed, 
+  // but here we just updated roles array.
+  // Note: user.role might be 'DOCTOR' now.
 
   return (
     <aside className="w-64 bg-white border-r border-gray-200 min-h-screen flex flex-col fixed left-0 top-0 bottom-0 z-10 shadow-sm">
       <div className="h-16 flex items-center px-6 border-b border-gray-100 bg-gray-50/50">
         <div className="flex items-center gap-2 font-bold text-xl text-blue-700 tracking-tight">
-          <MdDashboard className="w-7 h-7" />
+          <MdLocalHospital className="w-7 h-7" />
           <span>{t('app.title')}</span>
         </div>
       </div>

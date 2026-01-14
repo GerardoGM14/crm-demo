@@ -102,8 +102,8 @@ export const Tasks: React.FC = () => {
     task.description?.toLowerCase().includes(searchTerm.toLowerCase());
     
     // Role-based filtering
-    if (user?.role === 'SALES') {
-      return matchesSearch && task.assignedTo === user.id;
+    if (user?.role !== 'ADMIN') {
+      return matchesSearch && task.assignedTo === user?.id;
     } else {
       // Admin/Manager can filter
       if (filterType === 'MY') {
@@ -136,8 +136,8 @@ export const Tasks: React.FC = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h1 className="text-2xl font-bold text-gray-900">{t('tasks.title')}</h1>
         <div className="flex gap-2">
-          {/* Admin/Manager Filter Toggle */}
-          {(user?.role === 'ADMIN' || user?.role === 'MANAGER') && (
+          {/* Admin Filter Toggle */}
+          {user?.role === 'ADMIN' && (
             <div className="flex bg-gray-100 rounded-lg p-1 mr-2">
               <button
                 onClick={() => setFilterType('MY')}

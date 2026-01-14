@@ -1,4 +1,4 @@
-export type Role = 'ADMIN' | 'MANAGER' | 'SALES';
+export type Role = 'ADMIN' | 'DOCTOR' | 'NURSE' | 'RECEPTIONIST';
 
 export interface User {
   id: string;
@@ -6,36 +6,47 @@ export interface User {
   email: string;
   role: Role;
   avatar?: string;
+  specialty?: string; // Para doctores
+  cmp?: string; // Colegio Médico del Perú
 }
 
-export interface Lead {
+export interface Patient {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
+  dni: string; // Documento de Identidad
   email: string;
   phone: string;
-  company: string;
-  status: 'NEW' | 'CONTACTED' | 'QUALIFIED' | 'LOST';
+  birthDate: string;
+  gender: 'M' | 'F';
+  address: string;
+  bloodType?: string;
+  allergies?: string;
+  status: 'ACTIVE' | 'INACTIVE';
   createdAt: string;
-  assignedTo?: string; // User ID
 }
 
-export interface Opportunity {
+export interface Appointment {
   id: string;
-  title: string;
-  value: number;
-  stage: 'PROSPECTING' | 'NEGOTIATION' | 'CLOSED_WON' | 'CLOSED_LOST';
-  leadId: string;
-  createdAt: string;
-  expectedCloseDate: string;
-}
-
-export interface Activity {
-  id: string;
-  type: 'CALL' | 'EMAIL' | 'MEETING' | 'NOTE';
-  description: string;
+  patientId: string;
+  patientName: string; // Denormalized for display
+  doctorId: string;
   date: string;
-  relatedTo: string; // Lead ID or Opportunity ID
-  createdBy: string; // User ID
+  type: 'CONSULTATION' | 'CHECKUP' | 'PROCEDURE' | 'EMERGENCY';
+  status: 'SCHEDULED' | 'CONFIRMED' | 'COMPLETED' | 'CANCELLED' | 'NO_SHOW';
+  notes?: string;
+  symptoms?: string;
+}
+
+export interface MedicalRecord {
+  id: string;
+  patientId: string;
+  doctorId: string;
+  date: string;
+  diagnosis: string;
+  prescription: string;
+  notes: string;
+  type: 'CONSULTATION' | 'LAB' | 'IMAGE' | 'PROCEDURE';
 }
 
 export interface Task {

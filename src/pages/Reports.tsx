@@ -2,20 +2,20 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
 import { storage } from '../utils/storage';
 import { useLanguage } from '../context/LanguageContext';
-import type { Lead, Opportunity } from '../types';
+import type { Patient, Appointment } from '../types';
 
 export const Reports: React.FC = () => {
   const { t } = useLanguage();
-  const leads = storage.getAll<Lead>(storage.KEYS.LEADS);
-  const opportunities = storage.getAll<Opportunity>(storage.KEYS.OPPORTUNITIES);
+  const patients = storage.getAll<Patient>(storage.KEYS.PATIENTS);
+  const appointments = storage.getAll<Appointment>(storage.KEYS.APPOINTMENTS);
 
   // Funnel Data
   const funnelData = [
-    { label: t('reports.funnel.total_leads'), value: leads.length, color: 'bg-blue-500', width: '100%' },
-    { label: t('reports.funnel.contacted'), value: leads.filter(l => l.status !== 'NEW').length, color: 'bg-blue-600', width: '80%' },
-    { label: t('reports.funnel.qualified'), value: leads.filter(l => l.status === 'QUALIFIED').length, color: 'bg-blue-700', width: '60%' },
-    { label: t('reports.funnel.opportunities'), value: opportunities.length, color: 'bg-blue-800', width: '40%' },
-    { label: t('reports.funnel.won_deals'), value: opportunities.filter(o => o.stage === 'CLOSED_WON').length, color: 'bg-blue-900', width: '20%' },
+    { label: t('reports.funnel.total_patients'), value: patients.length, color: 'bg-blue-500', width: '100%' },
+    { label: 'Active Patients', value: patients.filter(p => p.status === 'ACTIVE').length, color: 'bg-blue-600', width: '85%' },
+    { label: 'Appointments Created', value: appointments.length, color: 'bg-blue-700', width: '70%' },
+    { label: 'Completed Appointments', value: appointments.filter(a => a.status === 'COMPLETED').length, color: 'bg-blue-800', width: '50%' },
+    { label: 'New Patients', value: patients.filter(p => new Date(p.createdAt).getMonth() === new Date().getMonth()).length, color: 'bg-blue-900', width: '30%' },
   ];
 
   // Revenue by Month (Mock + Real Data hybrid)
@@ -59,7 +59,7 @@ export const Reports: React.FC = () => {
                       className={`h-full ${stage.color} rounded-lg transition-all duration-1000 ease-out flex items-center justify-center text-white text-xs font-bold shadow-lg`}
                       style={{ width: stage.width }}
                     >
-                      {Math.round((stage.value / leads.length) * 100)}%
+                      {Math.round((stage.value / (patients.length || 1)) * 100)}%
                     </div>
                   </div>
                 </div>
@@ -105,7 +105,7 @@ export const Reports: React.FC = () => {
              <div className="w-48 h-48 rounded-full border-[16px] border-blue-500 border-t-green-500 border-r-purple-500 relative">
                <div className="absolute inset-0 flex items-center justify-center flex-col">
                  <span className="text-2xl font-bold text-gray-900">{t('reports.sources.total')}</span>
-                 <span className="text-sm text-gray-500">{leads.length} {t('reports.sources.leads')}</span>
+                 <span className="text-sm text-gray-500">{patients.length} {t('reports.sources.patients')}</span>
                </div>
              </div>
           </CardContent>

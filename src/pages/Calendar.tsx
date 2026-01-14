@@ -4,7 +4,7 @@ import { Button } from '../components/ui/Button';
 import { MdChevronLeft, MdChevronRight, MdToday } from 'react-icons/md';
 import { storage } from '../utils/storage';
 import { useLanguage } from '../context/LanguageContext';
-import type { Task, Opportunity } from '../types';
+import type { Task, Appointment } from '../types';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, isToday } from 'date-fns';
 import { es, enUS } from 'date-fns/locale';
 
@@ -12,7 +12,7 @@ export const Calendar: React.FC = () => {
   const { t, language } = useLanguage();
   const [currentDate, setCurrentDate] = useState(new Date());
   const tasks = storage.getAll<Task>(storage.KEYS.TASKS);
-  const opportunities = storage.getAll<Opportunity>(storage.KEYS.OPPORTUNITIES);
+  const appointments = storage.getAll<Appointment>(storage.KEYS.APPOINTMENTS);
 
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(monthStart);
@@ -38,8 +38,8 @@ export const Calendar: React.FC = () => {
 
   const getEventsForDay = (date: Date) => {
     const dayTasks = tasks.filter(task => isSameDay(new Date(task.dueDate), date));
-    const dayOpps = opportunities.filter(opp => isSameDay(new Date(opp.expectedCloseDate), date));
-    return [...dayTasks.map(t => ({ ...t, type: 'task' })), ...dayOpps.map(o => ({ ...o, type: 'opportunity' }))];
+    const dayAppts = appointments.filter(appt => isSameDay(new Date(appt.date), date));
+    return [...dayTasks.map(t => ({ ...t, type: 'task' })), ...dayAppts.map(a => ({ ...a, title: `${a.patientName} - ${a.type}`, type: 'appointment' }))];
   };
 
   return (

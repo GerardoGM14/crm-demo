@@ -1,77 +1,75 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
-import { MdAttachMoney, MdPeople, MdTrendingUp, MdPieChart, MdDns, MdGroupWork, MdTrackChanges } from 'react-icons/md';
+import { MdPeople, MdPieChart, MdDns, MdEventAvailable, MdLocalHospital } from 'react-icons/md';
 import { storage } from '../utils/storage';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../utils/translations';
-import type { Lead, Opportunity } from '../types';
+import type { Patient, Appointment } from '../types';
 
 export const Dashboard: React.FC = () => {
   const { user } = useAuth();
   const { t, language } = useLanguage();
   const [stats, setStats] = useState({
-    totalLeads: 0,
-    activeOpportunities: 0,
-    totalValue: 0,
-    wonValue: 0,
-    winRate: 0,
+    totalPatients: 0,
+    scheduledAppointments: 0,
+    completedAppointments: 0,
+    attendanceRate: 0,
   });
   
-  const [recentLeads, setRecentLeads] = useState<Lead[]>([]);
+  const [recentPatients, setRecentPatients] = useState<Patient[]>([]);
 
   useEffect(() => {
-    const leads = storage.getAll<Lead>(storage.KEYS.LEADS);
-    const opportunities = storage.getAll<Opportunity>(storage.KEYS.OPPORTUNITIES);
+    const patients = storage.getAll<Patient>(storage.KEYS.PATIENTS);
+    const appointments = storage.getAll<Appointment>(storage.KEYS.APPOINTMENTS);
     
-    const wonOpps = opportunities.filter(o => o.stage === 'CLOSED_WON');
-    const lostOpps = opportunities.filter(o => o.stage === 'CLOSED_LOST');
-    const closedCount = wonOpps.length + lostOpps.length;
+    const completedApps = appointments.filter(a => a.status === 'COMPLETED');
+    const cancelledApps = appointments.filter(a => a.status === 'CANCELLED');
+    const totalFinished = completedApps.length + cancelledApps.length;
     
     setStats({
-      totalLeads: leads.length,
-      activeOpportunities: opportunities.filter(o => o.stage !== 'CLOSED_LOST' && o.stage !== 'CLOSED_WON').length,
-      totalValue: opportunities.reduce((acc, curr) => acc + curr.value, 0),
-      wonValue: wonOpps.reduce((acc, curr) => acc + curr.value, 0),
-      winRate: closedCount > 0 ? Math.round((wonOpps.length / closedCount) * 100) : 0,
+      totalPatients: patients.length,
+      scheduledAppointments: appointments.filter(a => a.status === 'SCHEDULED' || a.status === 'CONFIRMED').length,
+      completedAppointments: completedApps.length,
+      attendanceRate: totalFinished > 0 ? Math.round((completedApps.length / totalFinished) * 100) : 100,
     });
     
-    setRecentLeads(leads.slice(0, 5));
+    setRecentPatients(patients.slice(0, 5));
   }, []);
 
   const statCards = [
     { 
-      title: t('dashboard.stats.total_revenue'), 
-      value: `$${stats.wonValue.toLocaleString()}`, 
-      change: '+12.5%', 
-      isPositive: true,
-      icon: MdAttachMoney, 
-      color: 'text-emerald-600', 
-      bg: 'bg-emerald-50' 
-    },
-    { 
       title: t('dashboard.stats.active_pipeline'), 
-      value: `$${stats.totalValue.toLocaleString()}`, 
-      change: '+5.2%', 
+      value: stats.scheduledAppointments, 
+      change: '+3', 
       isPositive: true,
-      icon: MdTrendingUp, 
+      icon: MdEventAvailable, 
       color: 'text-blue-600', 
       bg: 'bg-blue-50' 
     },
     { 
-      title: t('dashboard.stats.total_leads'), 
-      value: stats.totalLeads, 
-      change: '+24%', 
+      title: t('dashboard.stats.total_patients'), 
+      value: stats.totalPatients, 
+      change: '+12%', 
       isPositive: true,
       icon: MdPeople, 
       color: 'text-violet-600', 
       bg: 'bg-violet-50' 
     },
     { 
+      title: t('dashboard.stats.completed_visits'), 
+      value: stats.completedAppointments, 
+      change: '+5%', 
+      isPositive: true,
+      icon: MdLocalHospital, 
+      color: 'text-emerald-600', 
+      bg: 'bg-emerald-50' 
+    },
+    { 
       title: t('dashboard.stats.win_rate'), 
-      value: `${stats.winRate}%`, 
-      change: '-2.1%', 
-      isPositive: false,
+      value: `${stats.attendanceRate}%`, 
+      change: '+1%', 
+      isPositive: true,
       icon: MdPieChart, 
       color: 'text-orange-600', 
       bg: 'bg-orange-50' 
@@ -108,54 +106,6 @@ export const Dashboard: React.FC = () => {
                 <div className="text-xl font-bold text-purple-400">8</div>
               </div>
             </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {user?.role === 'MANAGER' && (
-        <Card className="bg-indigo-50 border-indigo-100">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-indigo-900 flex items-center gap-2">
-              <MdGroupWork className="text-indigo-600" /> {t('dashboard.widgets.team_performance')}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              <div className="flex justify-between items-center text-sm">
-                <span className="text-gray-600">{t('dashboard.widgets.team_a')}</span>
-                <span className="font-bold text-indigo-700">92% {t('dashboard.widgets.to_target')}</span>
-              </div>
-              <div className="h-2 bg-indigo-200 rounded-full overflow-hidden">
-                <div className="h-full bg-indigo-600 w-[92%]"></div>
-              </div>
-              <div className="flex justify-between items-center text-sm mt-2">
-                <span className="text-gray-600">{t('dashboard.widgets.team_b')}</span>
-                <span className="font-bold text-indigo-700">78% {t('dashboard.widgets.to_target')}</span>
-              </div>
-              <div className="h-2 bg-indigo-200 rounded-full overflow-hidden">
-                <div className="h-full bg-indigo-600 w-[78%]"></div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {user?.role === 'SALES' && (
-        <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white border-none">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-white flex items-center gap-2">
-              <MdTrackChanges className="text-blue-200" /> {t('dashboard.widgets.my_monthly_target')}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-end gap-2 mb-2">
-              <span className="text-3xl font-bold">$12,500</span>
-              <span className="text-blue-100 mb-1">/ $20,000</span>
-            </div>
-            <div className="h-3 bg-blue-800/30 rounded-full overflow-hidden backdrop-blur-sm">
-              <div className="h-full bg-white/90 w-[62.5%] shadow-[0_0_10px_rgba(255,255,255,0.5)]"></div>
-            </div>
-            <div className="mt-2 text-xs text-blue-100 text-right">62.5% {t('dashboard.widgets.achieved_msg')}</div>
           </CardContent>
         </Card>
       )}
@@ -206,35 +156,33 @@ export const Dashboard: React.FC = () => {
         
         <Card className="h-full">
           <CardHeader>
-            <CardTitle>{t('dashboard.recent_leads.title')}</CardTitle>
+            <CardTitle>{t('dashboard.recent_patients.title')}</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
             <div className="divide-y divide-gray-100">
-              {recentLeads.length === 0 ? (
-                <div className="p-6 text-center text-gray-500 text-sm">{t('dashboard.recent_leads.no_leads')}</div>
+              {recentPatients.length === 0 ? (
+                <div className="p-6 text-center text-gray-500 text-sm">{t('dashboard.recent_patients.no_patients')}</div>
               ) : (
-                recentLeads.map(lead => (
-                  <div key={lead.id} className="p-4 hover:bg-gray-50 flex items-center gap-3 transition-colors">
+                recentPatients.map(patient => (
+                  <div key={patient.id} className="p-4 hover:bg-gray-50 flex items-center gap-3 transition-colors">
                     <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-600">
-                      {lead.name.charAt(0)}
+                      {patient.firstName.charAt(0)}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate">{lead.name}</p>
-                      <p className="text-xs text-gray-500 truncate">{lead.company}</p>
+                      <p className="text-sm font-medium text-gray-900 truncate">{patient.firstName} {patient.lastName}</p>
+                      <p className="text-xs text-gray-500 truncate">{patient.dni}</p>
                     </div>
                     <span className={`text-xs px-2 py-1 rounded-full font-medium
-                      ${lead.status === 'NEW' ? 'bg-blue-100 text-blue-700' : 
-                        lead.status === 'QUALIFIED' ? 'bg-green-100 text-green-700' :
-                        lead.status === 'CONTACTED' ? 'bg-orange-100 text-orange-700' : 'bg-gray-100 text-gray-700'
+                      ${patient.status === 'ACTIVE' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
                       }`}>
-                      {lead.status}
+                      {patient.status}
                     </span>
                   </div>
                 ))
               )}
             </div>
             <div className="p-4 border-t border-gray-100 text-center">
-              <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">{t('dashboard.recent_leads.view_all')}</button>
+              <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">{t('dashboard.recent_patients.view_all')}</button>
             </div>
           </CardContent>
         </Card>
